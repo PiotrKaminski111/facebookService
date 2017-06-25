@@ -22,7 +22,9 @@ public class MainClass implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws NotFoundException {
-		System.out.println(this.facebookApi.findById("11").getFriends());
+		System.out.println(this.facebookApi.findById("1").getFriends());
+		this.facebookApi.findAll();
+		this.facebookApi.findPostIdsByKeyword();
 	}
 	
     public static void main(String[] args) {
