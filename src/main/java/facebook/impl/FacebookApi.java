@@ -23,7 +23,7 @@ public class FacebookApi implements FacebookService {
 
 	@Override
 	public Facebook findById(String id) throws NotFoundException {
-		if (fbProfilesMap.containsKey(id) == true) {
+		if (fbProfilesMap.containsKey(id)) {
 			return fbProfilesMap.get(id);
 		}
 		
@@ -38,17 +38,12 @@ public class FacebookApi implements FacebookService {
 		fbProfilesMap.forEach((id,profile)->{
 			List<Post> Posts = profile.getPosts();
 
-			Map<String, Long> TempWordCount = Posts
+			Posts
 					.stream()
 					.map(post -> post.getMessage().split("[\\s\\.!():]+"))
 					.flatMap(array->Arrays.stream(array))
-					.collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
-
-			TempWordCount
-				.entrySet()
-				.stream()
-				.forEach(
-					e -> WordCount.put(e.getKey(), WordCount.containsKey(e.getKey()) == true ? WordCount.get(e.getKey()) + 1 : e.getValue()));
+					.collect(Collectors.groupingBy(Function.identity(), Collectors.counting())).forEach(
+							(e,v) -> WordCount.put(e, WordCount.containsKey(e) == true ? WordCount.get(e) + 1 : v));
 
 		});
 
