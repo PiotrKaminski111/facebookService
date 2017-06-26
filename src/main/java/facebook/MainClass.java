@@ -25,6 +25,7 @@ public class MainClass implements CommandLineRunner {
 		this.facebookApi.findById("1");
 		this.facebookApi.findPostIdsByKeyword("You");
 		this.facebookApi.findMostCommonWords();
+		this.facebookApi.findAll();
 	}
 	
     public static void main(String[] args) {
