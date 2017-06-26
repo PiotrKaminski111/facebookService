@@ -25,9 +25,10 @@ public class FacebookApi implements FacebookService {
 	public Facebook findById(String id) throws NotFoundException {
 		if (fbProfilesMap.containsKey(id) == true) {
 			return fbProfilesMap.get(id);
-		} else {
-			throw new NotFoundException();
 		}
+		
+		throw new NotFoundException();
+		
 	}
 
 	@Override
@@ -37,19 +38,16 @@ public class FacebookApi implements FacebookService {
 		fbProfilesMap.forEach((id,profile)->{
 			List<Post> Posts = profile.getPosts();
 
-
 			Map<String, Long> TempWordCount = Posts
 					.stream()
-					.map(post -> post.getMessage().split(" "))
+					.map(post -> post.getMessage().split("[\\s\\.!():]+"))
 					.flatMap(array->Arrays.stream(array))
 					.collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
 
 			TempWordCount
 				.entrySet()
 				.stream()
-				.sorted(Map.Entry.<String, Long>comparingByValue()
-				.reversed())
-				.forEachOrdered(
+				.forEach(
 					e -> WordCount.put(e.getKey(), WordCount.containsKey(e.getKey()) == true ? WordCount.get(e.getKey()) + 1 : e.getValue()));
 
 		});
@@ -61,10 +59,10 @@ public class FacebookApi implements FacebookService {
 	@Override
 	public Set<String> findPostIdsByKeyword(String word) {
 		Set<String> IdOfPostsContaintsKeyword = new HashSet<>();
-		
-		fbProfilesMap.forEach((k,profile)->{
+
+		fbProfilesMap.values().forEach(profile->{
 			List<Post> Posts = profile.getPosts();
-					
+
 			IdOfPostsContaintsKeyword.addAll(
 				Posts
 					.stream()
@@ -74,7 +72,7 @@ public class FacebookApi implements FacebookService {
 			);
 
 		});
-		
+
 		return IdOfPostsContaintsKeyword;
 	}
 
@@ -82,9 +80,9 @@ public class FacebookApi implements FacebookService {
 	public Set<Facebook> findAll() {
 		Set<Facebook> sortedFbProfilesList = fbProfilesMap.values().stream()
 				.sorted((Comparator.comparing(Facebook::getFirstname).thenComparing(Facebook::getLastname))).collect(Collectors.toSet());
-		
+
 		return sortedFbProfilesList;
-	
+
 	}
 
 }
