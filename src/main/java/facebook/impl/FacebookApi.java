@@ -19,7 +19,7 @@ import facebook.profile.Post;
 @Component
 public class FacebookApi implements FacebookService {
 	
-	public static final String REGEX_PATTERN = "[\\s\\.!():]+";
+	private static final String REGEX_PATTERN = "[\\s\\.!():]+";
 	
 	private HashMap<String, Facebook> fbProfilesMap = LoadFbProfiles.loadFbProfilesFromJsonFiles();
 
@@ -55,12 +55,12 @@ public class FacebookApi implements FacebookService {
 
 	@Override
 	public Set<String> findPostIdsByKeyword(String word) {
-		Set<String> IdOfPostsContaintsKeyword = new HashSet<>();
+		Set<String> idOfPostsContaintsKeyword = new HashSet<>();
 
 		fbProfilesMap.values().forEach(profile->{
 			List<Post> Posts = profile.getPosts();
 
-			IdOfPostsContaintsKeyword.addAll(
+			idOfPostsContaintsKeyword.addAll(
 				Posts
 					.stream()
 					.filter(p -> p.getMessage().contains(word))
@@ -70,15 +70,15 @@ public class FacebookApi implements FacebookService {
 
 		});
 
-		return IdOfPostsContaintsKeyword;
+		return idOfPostsContaintsKeyword;
 	}
 
 	@Override
 	public Set<Facebook> findAll() {
-		Set<Facebook> sortedFbProfilesList = fbProfilesMap.values().stream()
+		Set<Facebook> sortedFbProfilesSet = fbProfilesMap.values().stream()
 				.sorted((Comparator.comparing(Facebook::getFirstname).thenComparing(Facebook::getLastname))).collect(Collectors.toSet());
 
-		return sortedFbProfilesList;
+		return sortedFbProfilesSet;
 
 	}
 
