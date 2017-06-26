@@ -1,17 +1,15 @@
 package facebook.impl;
 
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
-
-import com.fasterxml.jackson.core.JsonGenerationException;
 
 import facebook.profile.Facebook;
 import facebook.profile.Post;
@@ -32,27 +30,35 @@ public class FacebookApi implements FacebookService {
 
 	@Override
 	public Map<String, Long> findMostCommonWords() {
+		
 		return null;
+
 	}
 
 	@Override
 	public Set<String> findPostIdsByKeyword(String word) {
+		Set<String> IdOfPostsContaintsKeyword = new HashSet<>();
 		
 		fbProfilesList.forEach((k,profile)->{
 			List<Post> Posts = profile.getPosts();
-			
-			Posts.stream().filter(line -> !word.equals(line))
-            .collect(Collectors.toSet());   	
+					
+			IdOfPostsContaintsKeyword.addAll(
+				Posts
+					.stream()
+		            .filter(p -> p.getMessage().contains(word))
+		            .map(Post::getId)
+		            .collect(Collectors.toSet())
+			);
+        
 		});
 		
-		return Posts;
+		return IdOfPostsContaintsKeyword;
 	}
 
 	@Override
 	public Set<Facebook> findAll() {
-		Set<Facebook> sortedFbProfilesList = fbProfilesList.values().stream().sorted((e1,e2)->
-        	e1.getFirstname().compareTo(e2.getFirstname())
-        ).collect(Collectors.toSet());
+		Set<Facebook> sortedFbProfilesList = fbProfilesList.values().stream()
+				.sorted((Comparator.comparing(Facebook::getFirstname).thenComparing(Facebook::getLastname))).collect(Collectors.toSet());
 		
 		return sortedFbProfilesList;
 	

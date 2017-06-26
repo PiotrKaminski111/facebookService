@@ -23,8 +23,9 @@ public class MainClass implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws NotFoundException {
 		System.out.println(this.facebookApi.findById("1").getFriends());
-		this.facebookApi.findAll();
-		this.facebookApi.findPostIdsByKeyword();
+		System.out.println(this.facebookApi.findPostIdsByKeyword("You"));
+		
+		
 	}
 	
     public static void main(String[] args) {
