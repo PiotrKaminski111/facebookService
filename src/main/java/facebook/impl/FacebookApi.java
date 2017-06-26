@@ -1,12 +1,14 @@
 package facebook.impl;
 
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
@@ -30,8 +32,29 @@ public class FacebookApi implements FacebookService {
 
 	@Override
 	public Map<String, Long> findMostCommonWords() {
+		Map<String, Long> WordCount = new HashMap<>();
 		
-		return null;
+		fbProfilesList.forEach((id,profile)->{
+			List<Post> Posts = profile.getPosts();
+			
+			
+			Map<String, Long> TempWordCount = Posts
+					.stream()
+					.map(post -> post.getMessage().split(" "))
+					.flatMap(array->Arrays.stream(array))
+					.collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+			
+			TempWordCount
+				.entrySet()
+				.stream()
+		    	.sorted(Map.Entry.<String, Long>comparingByValue()
+				.reversed())
+		    	.forEachOrdered(
+	    			e -> WordCount.put(e.getKey(), WordCount.containsKey(e.getKey()) == true ? WordCount.get(e.getKey()) + 1 : e.getValue()));
+			
+		});
+		
+		return WordCount;
 
 	}
 

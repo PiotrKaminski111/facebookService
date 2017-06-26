@@ -24,6 +24,7 @@ public class MainClass implements CommandLineRunner {
 	public void run(String... args) throws NotFoundException {
 		System.out.println(this.facebookApi.findById("1").getFriends());
 		System.out.println(this.facebookApi.findPostIdsByKeyword("You"));
+		System.out.println(this.facebookApi.findMostCommonWords());
 		
 		
 	}
