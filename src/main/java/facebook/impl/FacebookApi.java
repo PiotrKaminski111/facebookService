@@ -46,7 +46,7 @@ public class FacebookApi implements FacebookService {
 				.map(post -> post.getMessage().split(REGEX_PATTERN))
 				.flatMap(array->Arrays.stream(array))
 				.collect(Collectors.groupingBy(Function.identity(), Collectors.counting())).forEach(
-						(e,v) -> WordCount.put(e, WordCount.containsKey(e) == true ? WordCount.get(e) + 1 : v));
+						(e,v) -> WordCount.put(e, WordCount.containsKey(e) == true ? WordCount.get(e) + v : v));
 
 		});
 
