@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.apache.tomcat.util.bcel.Const;
 import org.springframework.stereotype.Component;
 
 import facebook.profile.Facebook;
@@ -19,7 +20,9 @@ import facebook.profile.Post;
 @Component
 public class FacebookApi implements FacebookService {
 	
-	HashMap<String, Facebook> fbProfilesMap = LoadFbProfiles.loadFbProfilesFromJsonFiles();
+	public static final String REGEX_PATTERN = "[\\s\\.!():]+";
+	
+	private HashMap<String, Facebook> fbProfilesMap = LoadFbProfiles.loadFbProfilesFromJsonFiles();
 
 	@Override
 	public Facebook findById(String id) throws NotFoundException {
@@ -40,7 +43,7 @@ public class FacebookApi implements FacebookService {
 
 			Posts
 				.stream()
-				.map(post -> post.getMessage().split("[\\s\\.!():]+"))
+				.map(post -> post.getMessage().split(REGEX_PATTERN))
 				.flatMap(array->Arrays.stream(array))
 				.collect(Collectors.groupingBy(Function.identity(), Collectors.counting())).forEach(
 						(e,v) -> WordCount.put(e, WordCount.containsKey(e) == true ? WordCount.get(e) + 1 : v));
