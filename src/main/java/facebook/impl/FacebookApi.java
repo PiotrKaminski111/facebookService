@@ -39,11 +39,11 @@ public class FacebookApi implements FacebookService {
 			List<Post> Posts = profile.getPosts();
 
 			Posts
-					.stream()
-					.map(post -> post.getMessage().split("[\\s\\.!():]+"))
-					.flatMap(array->Arrays.stream(array))
-					.collect(Collectors.groupingBy(Function.identity(), Collectors.counting())).forEach(
-							(e,v) -> WordCount.put(e, WordCount.containsKey(e) == true ? WordCount.get(e) + 1 : v));
+				.stream()
+				.map(post -> post.getMessage().split("[\\s\\.!():]+"))
+				.flatMap(array->Arrays.stream(array))
+				.collect(Collectors.groupingBy(Function.identity(), Collectors.counting())).forEach(
+						(e,v) -> WordCount.put(e, WordCount.containsKey(e) == true ? WordCount.get(e) + 1 : v));
 
 		});
 
