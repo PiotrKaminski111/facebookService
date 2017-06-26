@@ -11,7 +11,6 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import org.apache.tomcat.util.bcel.Const;
 import org.springframework.stereotype.Component;
 
 import facebook.profile.Facebook;
