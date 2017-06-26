@@ -13,16 +13,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import facebook.profile.Facebook;
 
 public class LoadFbProfiles {
-	
+
 	public static HashMap<String, Facebook> loadFbProfilesFromJsonFiles() {
 		HashMap<String, Facebook> fbProfilesList = new HashMap<String, Facebook>();
-		
+
 		ClassLoader classLoader = LoadFbProfiles.class.getClassLoader();
-    	ObjectMapper mapper = new ObjectMapper();
-    	
-    	List<String> listOfResources = Arrays.asList("f1", "f2", "f3", "f4", "f5");
-    		
-    	listOfResources.forEach(item->{
+		ObjectMapper mapper = new ObjectMapper();
+
+		List<String> listOfResources = Arrays.asList("f1", "f2", "f3", "f4", "f5");
+
+		listOfResources.forEach(item->{
 			try {
 				Facebook facebook = mapper.readValue(new File(classLoader.getResource(item + ".json").getFile()), Facebook.class);
 				fbProfilesList.put(facebook.getId(), facebook);
@@ -34,7 +34,7 @@ public class LoadFbProfiles {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-    		
+			
 		});
 		
 		return fbProfilesList;

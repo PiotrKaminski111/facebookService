@@ -19,12 +19,12 @@ import facebook.profile.Post;
 @Component
 public class FacebookApi implements FacebookService {
 	
-	HashMap<String, Facebook> fbProfilesList = LoadFbProfiles.loadFbProfilesFromJsonFiles();
+	HashMap<String, Facebook> fbProfilesMap = LoadFbProfiles.loadFbProfilesFromJsonFiles();
 
 	@Override
 	public Facebook findById(String id) throws NotFoundException {
-		if (fbProfilesList.containsKey(id) == true) {
-			return fbProfilesList.get(id);
+		if (fbProfilesMap.containsKey(id) == true) {
+			return fbProfilesMap.get(id);
 		} else {
 			throw new NotFoundException();
 		}
@@ -33,27 +33,27 @@ public class FacebookApi implements FacebookService {
 	@Override
 	public Map<String, Long> findMostCommonWords() {
 		Map<String, Long> WordCount = new HashMap<>();
-		
-		fbProfilesList.forEach((id,profile)->{
+
+		fbProfilesMap.forEach((id,profile)->{
 			List<Post> Posts = profile.getPosts();
-			
-			
+
+
 			Map<String, Long> TempWordCount = Posts
 					.stream()
 					.map(post -> post.getMessage().split(" "))
 					.flatMap(array->Arrays.stream(array))
 					.collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
-			
+
 			TempWordCount
 				.entrySet()
 				.stream()
-		    	.sorted(Map.Entry.<String, Long>comparingByValue()
+				.sorted(Map.Entry.<String, Long>comparingByValue()
 				.reversed())
-		    	.forEachOrdered(
-	    			e -> WordCount.put(e.getKey(), WordCount.containsKey(e.getKey()) == true ? WordCount.get(e.getKey()) + 1 : e.getValue()));
-			
+				.forEachOrdered(
+					e -> WordCount.put(e.getKey(), WordCount.containsKey(e.getKey()) == true ? WordCount.get(e.getKey()) + 1 : e.getValue()));
+
 		});
-		
+
 		return WordCount;
 
 	}
@@ -62,17 +62,17 @@ public class FacebookApi implements FacebookService {
 	public Set<String> findPostIdsByKeyword(String word) {
 		Set<String> IdOfPostsContaintsKeyword = new HashSet<>();
 		
-		fbProfilesList.forEach((k,profile)->{
+		fbProfilesMap.forEach((k,profile)->{
 			List<Post> Posts = profile.getPosts();
 					
 			IdOfPostsContaintsKeyword.addAll(
 				Posts
 					.stream()
-		            .filter(p -> p.getMessage().contains(word))
-		            .map(Post::getId)
-		            .collect(Collectors.toSet())
+					.filter(p -> p.getMessage().contains(word))
+					.map(Post::getId)
+					.collect(Collectors.toSet())
 			);
-        
+
 		});
 		
 		return IdOfPostsContaintsKeyword;
@@ -80,7 +80,7 @@ public class FacebookApi implements FacebookService {
 
 	@Override
 	public Set<Facebook> findAll() {
-		Set<Facebook> sortedFbProfilesList = fbProfilesList.values().stream()
+		Set<Facebook> sortedFbProfilesList = fbProfilesMap.values().stream()
 				.sorted((Comparator.comparing(Facebook::getFirstname).thenComparing(Facebook::getLastname))).collect(Collectors.toSet());
 		
 		return sortedFbProfilesList;
